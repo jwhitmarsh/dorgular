@@ -1,0 +1,19 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div ng-include="'components/site-message/site-message.html'"></div>
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>
+            <a target="_blank" href="https://octodex.github.com/minion/" class="no-decoration">
+                <img id="octocat" src="assets/images/octominion.png" height="40px" alt="octocat"/>
+            </a>
+            Dora
+            <small>
+                <a href="https://github.com/dresources/utility-scripts" target="_blank">{{dorasTag}}</a>
+                <i ng-class="{hidden: doraUpToDate}" class="fa fa-exclamation clickable" data-placement="top"
+                   tooltip="Dora is not up-to-date. Please pull down the latest version." tooltip-trigger="mouseenter"></i>
+            </small>
+        </h1>
+    </div>
+</div>
