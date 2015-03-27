@@ -10,14 +10,26 @@ var _ = require('lodash');
 var serverFactory = require('./host.factory');
 var Host = require('./host.model');
 
+var vhosts = [];
+exports.vhosts = vhosts;
+
+
+function getAll(cb) {
+    Host.find(function (err, hosts) {
+        cb(err, hosts);
+    });
+}
+
+exports.getAll = getAll;
+
 // Get list of hosts
 exports.index = function (req, res) {
-    Host.find(function (err, hosts) {
+    getAll(function (err, hosts) {
         if (err) {
             return handleError(res, err);
         }
         return res.json(200, hosts);
-    });
+    })
 };
 
 // Get a single host
@@ -51,16 +63,8 @@ exports.create = function (req, res) {
         href: 'http://localhost:' + host.port
     });
 
-    var vhosts = [];
-
     async.series([
         function (cb) {
-            console.log('getting hosts...');
-            Host.find(function (err, hosts) {
-                vhosts = hosts;
-                cb(err);
-            });
-        }, function (cb) {
             console.log('validating host...');
             _validateHost(newHost, vhosts, function (results) {
                 if (!results.status) {
@@ -125,12 +129,6 @@ exports.create = function (req, res) {
         }
         return res.json(201, result);
     });
-    //Host.create(req.body, function (err, host) {
-    //    if (err) {
-    //        return handleError(res, err);
-    //    }
-    //    return res.json(201, host);
-    //});
 };
 
 // Updates an existing host in the DB.
@@ -157,20 +155,51 @@ exports.update = function (req, res) {
 
 // Deletes a host from the DB.
 exports.destroy = function (req, res) {
-    Host.findById(req.params.id, function (err, host) {
+    console.log('deleting...', req.params.id);
+
+    var result = {
+        status: true,
+        msg: 'success :) give me a whoop whoop!'
+    };
+
+    async.series([
+        function (cb) {
+            console.log('deleting drom db...');
+
+            Host.findById(req.params.id, function (err, host) {
+                if (err) {
+                    result.status = false;
+                    result.msg = err;
+                    return cb(err);
+                }
+                if (!host) {
+                    return res.send(404);
+                }
+                host.remove(function (err) {
+                    if (err) {
+                        result.status = false;
+                        result.msg = err;
+                        return cb(err);
+                    }
+                    cb(null);
+                });
+            });
+        },
+        function (cb) {
+            console.log('stopping server...');
+            var vhost = vhosts.filter(function (x) {
+                return x._id.equals(req.params.id);
+            });
+            vhost[0].server.destroy();
+            cb(null);
+        }
+    ], function (err) {
         if (err) {
             return handleError(res, err);
         }
-        if (!host) {
-            return res.send(404);
-        }
-        host.remove(function (err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.send(204);
-        });
+        return res.json(200, result);
     });
+
 };
 
 function handleError(res, err) {

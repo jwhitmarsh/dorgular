@@ -12,6 +12,17 @@
     vertical-align: middle;
 }
 
+// NEW HOST FORM
+.new-host-form {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s;
+}
+
+.new-host-form.active {
+    max-height: 1000px;
+}
+
 /* SITE LIST */
 .site-list {
     list-style: none;
@@ -42,6 +53,6 @@ li.site.active:hover {
     margin-left: -24px;
 }
 
-.no-tag{
+.no-tag {
     color: #A94442;
 }

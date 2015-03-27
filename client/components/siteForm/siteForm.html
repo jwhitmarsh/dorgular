@@ -4,7 +4,8 @@
             <button class="btn btn-primary save" tooltip="Save" tooltip-placement="top">
                 <i class="fa fa-save"></i>
             </button>
-            <button class="btn btn-danger delete" tooltip="Delete" tooltipplacement="top" ng-click="deleteHost(host._id)">
+            <button class="btn btn-danger delete" tooltip="Delete" tooltipplacement="top"
+                    data-toggle="modal" data-target="#deleteConfirmModal" ng-click="setActiveHost(host)">
                 <i class="fa fa-trash"></i>
             </button>
             <button class="btn btn-default gitTag" tooltip="Sync git tag" tooltipplacement="top">
@@ -60,3 +61,5 @@
         </div>
     </div>
 </div>
+
+

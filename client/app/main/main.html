@@ -22,7 +22,7 @@
                 <div class="col-xs-12 form-inline">
                     <div class="form-group ">
                         <i class="fa fa-github clickable" data-toggle="tooltip" data-placement="top" title=""></i>
-                        <button class="btn btn-primary" ng-click="addHost()">Create new</button>
+                        <button class="btn btn-primary" ng-click="newHost.isVisible = !newHost.isVisible">Create new</button>
                         <button class="btn btn-primary" id="syncAllHosts">
                             <i class="fa fa-refresh"></i>
                         </button>
@@ -35,7 +35,8 @@
                                 <li><a href="#">Port</a></li>
                             </ul>
                         </div>
-                        <input class="form-control search" type="text" id="search" placeholder="search (by port or name)...">
+                        <input class="form-control search" type="text" id="search" placeholder="search (by port or name)..."
+                               ng-keyup="filterHosts($event)">
                     </div>
                 </div>
             </div>
@@ -43,8 +44,15 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
+            <div class="new-host-form" ng-class="{active: newHost.isVisible}">
+                <p>new form</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
             <ul class="site-list">
-                <li ng-repeat="host in hosts" class="site" ng-class="{active: host.active}">
+                <li ng-repeat="host in (hosts | filter:{include:true})" class="site" ng-class="{active: host.active}">
                     <div class="row">
                         <div class="col-xs-2">
                             <i class="fa fa-tablet" ng-class="{hidden: !host.isIpadApp}"></i>
@@ -75,4 +83,20 @@
             </ul>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span>Are you sure you want to delete this virtual host?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Nope</button>
+                <button type="button" class="btn btn-primary" ng-click="deleteHost()">Super sure</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>

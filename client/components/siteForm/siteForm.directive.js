@@ -12,6 +12,15 @@ angular.module('dorgularApp')
                 scope.$watch('host.active', function (active) {
                     if (active) {
                         container.slideDown();
+
+                        var elementTop = container.offset().top;
+                        var elementHeight = container.height();
+
+                        if ($(window).height() < (elementTop + elementHeight)) {
+                            $('body').animate({
+                                scrollTop: elementTop - 40
+                            }, 'slow');
+                        }
                     } else {
                         container.slideUp();
                     }
