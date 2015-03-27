@@ -5,6 +5,6 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/dorgular-test'
+    uri: 'mongodb://localhost/dora'
   }
 };

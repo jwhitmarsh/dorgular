@@ -5,8 +5,8 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/dorgular-dev'
+    uri: 'mongodb://localhost/dora'
   },
 
-  seedDB: true
+  seedDB: false
 };

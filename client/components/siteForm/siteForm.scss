@@ -1,0 +1,30 @@
+.well {
+    min-height: 0;
+    position: relative;
+    margin-top: 5px;
+}
+
+.edit-menu > div {
+    display: inline-block;
+    padding: 0 15px;
+}
+
+.edit-menu .build {
+    background: #A7CD53;
+    border-color: #A7CD53;
+    color: #fff;
+}
+
+.edit-menu .build:hover {
+    color: #fff;
+}
+
+.edit-menu .release {
+    background: #AE72B0;
+    border-color: #AE72B0;
+    color: #fff;
+}
+
+.edit-menu .release:hover {
+    color: #fff;
+}

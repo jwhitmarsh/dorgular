@@ -1,6 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div ng-include="'components/site-message/site-message.html'"></div>
+<site-message></site-message>
 
 <div class="container-fluid">
     <div class="page-header">
@@ -15,5 +15,64 @@
                    tooltip="Dora is not up-to-date. Please pull down the latest version." tooltip-trigger="mouseenter"></i>
             </small>
         </h1>
+    </div>
+    <div class="row sites-menu">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 form-inline">
+                    <div class="form-group ">
+                        <i class="fa fa-github clickable" data-toggle="tooltip" data-placement="top" title=""></i>
+                        <button class="btn btn-primary" ng-click="addHost()">Create new</button>
+                        <button class="btn btn-primary" id="syncAllHosts">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <div class="btn-group divider-right">
+                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                Sort by <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Name</a></li>
+                                <li><a href="#">Port</a></li>
+                            </ul>
+                        </div>
+                        <input class="form-control search" type="text" id="search" placeholder="search (by port or name)...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <ul class="site-list">
+                <li ng-repeat="host in hosts" class="site" ng-class="{active: host.active}">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <i class="fa fa-tablet" ng-class="{hidden: !host.isIpadApp}"></i>
+                            <a href="{{host.href}}" target="_blank">{{host.port}} : {{host.name}}</a>
+                        </div>
+                        <div class="col-xs-1">
+                            <a href="{{host.giturl}}" target="_blank">
+                                <i class="fa fa-github" ng-class="{hidden: host.tag.length === 0}"></i>
+                                <span class="no-tag" ng-class="{hidden: host.tag.length > 0}">
+                                    <i class="fa fa-github-alt"></i>
+                                    No tag :(
+                                </span>
+                                {{host.tag | limitTo:7}}
+                            </a>
+                        </div>
+                        <div class="col-xs-1">
+                            <button ng-click="host.active = !host.active" class="btn btn-default btn-xs">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <site-form></site-form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

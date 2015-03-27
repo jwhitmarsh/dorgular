@@ -1,7 +1,47 @@
-.container-fluid{
+.container-fluid {
     padding-top: 0;
 }
 
-.page-header{
+.page-header {
     margin-top: 20px;
+}
+
+.sites-menu .fa-github {
+    font-size: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+}
+
+/* SITE LIST */
+.site-list {
+    list-style: none;
+}
+
+li.site {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    transition-duration: 0.3s;
+    line-height: 25px;
+}
+
+li.site:hover {
+    background: #eee;
+}
+
+li.site.active:hover {
+    background-color: #fff;
+}
+
+.site .row > div > i.fa {
+    cursor: pointer;
+    margin-right: 10px;
+    color: #858585;
+}
+
+.site .row > div > .fa-tablet {
+    margin-left: -24px;
+}
+
+.no-tag{
+    color: #A94442;
 }

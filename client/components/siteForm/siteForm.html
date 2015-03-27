@@ -1,0 +1,62 @@
+<div class="site-form well">
+    <div class="edit-menu">
+        <div class="col-xs-divider-right">
+            <button class="btn btn-primary save" tooltip="Save" tooltip-placement="top">
+                <i class="fa fa-save"></i>
+            </button>
+            <button class="btn btn-danger delete" tooltip="Delete" tooltipplacement="top" ng-click="deleteHost(host._id)">
+                <i class="fa fa-trash"></i>
+            </button>
+            <button class="btn btn-default gitTag" tooltip="Sync git tag" tooltipplacement="top">
+                <i class="fa fa-refresh"></i>
+            </button>
+                    <span title="Click to toggle iPad settings" tooltipplacement="top">
+                        <button class="btn btn-default is-ipad active" data-toggle="button" aria-pressed="true">
+                            <i class="fa fa-tablet"></i>
+                        </button>
+                    </span>
+        </div>
+        <div class="col-xs-divider-right ipad-menu">
+            <button class="btn build" title="Build" tooltipplacement="top">
+                <i class="fa fa-play"></i>
+            </button>
+            <button class="btn release" title="Release" tooltipplacement="top">
+                <i class="fa fa-globe"></i>
+            </button>
+        </div>
+        <div class="ipad-menu">
+            <button class="btn btn-default engine" title="Extract engine" tooltipplacement="top">
+                <i class="fa fa-wrench"></i>
+            </button>
+            <button class="btn btn-default docs" title="Generate docs" tooltipplacement="top">
+                <i class="fa fa-book"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <form>
+                <input type="hidden" class="id" name="_id">
+
+                <div class="form-group ">
+                    <div class="col-sm-3">
+                        <input class="form-control input-md name" type="text" name="name" placeholder="name">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-sm-2">
+                        <input class="form-control input-md port" type="text" name="port" placeholder="port">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-sm-7 input-group" style="padding-left:15px;">
+                        <input class="form-control input-md directory" type="text"
+                               name="directory"
+                               placeholder="directory">
+                        <span class="input-group-addon clickable">..</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
