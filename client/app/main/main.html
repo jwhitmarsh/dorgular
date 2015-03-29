@@ -22,7 +22,7 @@
                 <div class="col-xs-12 form-inline">
                     <div class="form-group ">
                         <i class="fa fa-github clickable" data-toggle="tooltip" data-placement="top" title=""></i>
-                        <button class="btn btn-primary" ng-click="newHost.isVisible = !newHost.isVisible">Create new</button>
+                        <button class="btn btn-primary" ng-click="newHost.active = !newHost.active">Create new</button>
                         <button class="btn btn-primary" id="syncAllHosts">
                             <i class="fa fa-refresh"></i>
                         </button>
@@ -44,9 +44,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="new-host-form" ng-class="{active: newHost.isVisible}">
-                <p>new form</p>
-            </div>
+            <site-form site="newHost"></site-form>
         </div>
     </div>
     <div class="row">
@@ -76,7 +74,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <site-form></site-form>
+                            <site-form site="host"></site-form>
                         </div>
                     </div>
                 </li>
@@ -93,7 +91,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Nope</button>
-                <button type="button" class="btn btn-primary" ng-click="deleteHost()">Super sure</button>
+                <button type="button" class="btn btn-primary" ng-click="deleteHost()" data-dismiss="modal">Super sure</button>
             </div>
         </div>
         <!-- /.modal-content -->

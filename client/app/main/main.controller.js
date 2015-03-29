@@ -18,7 +18,7 @@ angular.module('dorgularApp')
             name: '',
             port: '',
             directory: '',
-            isVisible: false
+            active: true
         };
 
         // ui methods
@@ -73,6 +73,13 @@ angular.module('dorgularApp')
             $http.delete('/api/hosts/' + $scope.activeHost._id)
                 .success(_apiCallSuccess)
                 .error(_apiCallError);
+        };
+
+        $scope.closeNewForm = function (site) {
+            site.active = false;
+            site.name = '';
+            site.port = '';
+            site.directory = '';
         };
 
         $scope.$on('$destroy', function () {

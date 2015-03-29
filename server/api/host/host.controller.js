@@ -136,20 +136,84 @@ exports.update = function (req, res) {
     if (req.body._id) {
         delete req.body._id;
     }
-    Host.findById(req.params.id, function (err, host) {
+
+    var result = {
+        status: true,
+        msg: 'it worked! rejoice!'
+    };
+
+    var editedHost = req.body;
+
+    console.log('editing host', editedHost);
+
+    async.series([
+        function (cb) {
+            _validateHost(editedHost, vhosts, function (results) {
+                console.log('validation: ', results);
+                if (!results.status) {
+                    return cb(results.msg);
+                }
+                cb(null);
+            });
+        },
+        function (cb) {
+            console.log('updating db...');
+
+            Host.findById(req.params.id, function (err, host) {
+                if (err) {
+                    cb(err);
+                }
+                if (!host) {
+                    return res.send(404);
+                }
+                var updated = _.merge(host, req.body);
+                updated.save(function (err) {
+                    cb(err);
+                });
+            });
+
+            //Host.findByIdAndUpdate(editedHost._id, {
+            //    $set: {
+            //        name: editedHost.name,
+            //        directory: editedHost.directory,
+            //        port: editedHost.port,
+            //        href: 'http://localhost:' + editedHost.port
+            //    }
+            //}, function (err) {
+            //    if (err) {
+            //        result.status = false;
+            //        result.msg = err;
+            //        return cb(err);
+            //    }
+            //    cb(null);
+            //});
+        },
+        function (cb) {
+            // reset the port the app is listening on in case they've changed the port
+            // a bit heavy handed, but it's quick
+            console.log('restarting server...');
+            var vhost = vhosts.filter(function (x) {
+                return x._id.equals(editedHost._id);
+            })[0];
+
+            console.log('closing server...');
+            vhost.server.destroy(function () {
+                console.log('server closed');
+                console.log('creating new server', editedHost);
+                serverFactory.create(editedHost, function (result) {
+                    vhost.server = result.server;
+                    vhost.app = result.app;
+                    cb(null);
+                });
+            });
+        }
+    ], function (err) {
         if (err) {
-            return handleError(res, err);
+            console.error(err);
+            result.status = false;
+            result.msg = err;
         }
-        if (!host) {
-            return res.send(404);
-        }
-        var updated = _.merge(host, req.body);
-        updated.save(function (err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.json(200, host);
-        });
+        return res.json(200, result);
     });
 };
 

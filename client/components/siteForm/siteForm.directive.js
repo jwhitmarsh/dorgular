@@ -5,11 +5,15 @@ angular.module('dorgularApp')
         return {
             templateUrl: 'components/siteForm/siteForm.html',
             restrict: 'EA',
+            scope:{
+                site: '='
+            },
+            controller: 'MainCtrl',
             link: function (scope, element) {
                 var container = element.find('.site-form');
                 container.hide();
 
-                scope.$watch('host.active', function (active) {
+                scope.$watch('site.active', function (active) {
                     if (active) {
                         container.slideDown();
 
@@ -25,6 +29,8 @@ angular.module('dorgularApp')
                         container.slideUp();
                     }
                 });
+
+                scope.$watch('site', true);
             }
         };
     });
