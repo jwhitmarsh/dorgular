@@ -1,21 +1,23 @@
 <div class="site-form well">
     <div class="edit-menu">
         <div class="col-xs-divider-right">
-            <button class="btn btn-primary save" tooltip="Save" tooltip-placement="top">
+            <button class="btn btn-primary save" tooltip="Save" tooltip-placement="top" ng-click="saveHost(site)">
                 <i class="fa fa-save"></i>
             </button>
-            <button class="btn btn-danger" ng-click="closeNewForm(site)">
+            <button class="btn btn-danger" ng-click="closeNewForm(site)" ng-class="{hidden: site._id}">
                 <i class="fa fa-close"></i>
             </button>
             <span ng-class="{hidden: !site._id}">
-                <button class="btn btn-danger delete" tooltip="Delete" tooltipplacement="top"
-                        data-toggle="modal" data-target="#deleteConfirmModal" ng-click="setActiveHost(site)">
-                    <i class="fa fa-trash"></i>
-                </button>
-                <button class="btn btn-default gitTag" tooltip="Sync git tag" tooltipplacement="top">
+                <span tooltip="Delete" tooltip-placement="top">
+                    <button class="btn btn-danger"
+                            data-toggle="modal" data-target="#deleteConfirmModal" ng-click="setActiveHost(site)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </span>
+                <button class="btn btn-default gitTag" tooltip="Sync git tag" tooltip-placement="top">
                     <i class="fa fa-refresh"></i>
                 </button>
-                <span title="Click to toggle iPad settings" tooltipplacement="top">
+                <span title="Click to toggle iPad settings" tooltip-placement="top">
                     <button class="btn btn-default is-ipad active" data-toggle="button" aria-pressed="true">
                         <i class="fa fa-tablet"></i>
                     </button>
@@ -23,18 +25,18 @@
             </span>
         </div>
         <div class="col-xs-divider-right" ng-class="{hidden: !site.isIpadApp}">
-            <button class="btn build" title="Build" tooltipplacement="top">
+            <button class="btn build" title="Build" tooltip-placement="top">
                 <i class="fa fa-play"></i>
             </button>
-            <button class="btn release" title="Release" tooltipplacement="top">
+            <button class="btn release" title="Release" tooltip-placement="top">
                 <i class="fa fa-globe"></i>
             </button>
         </div>
         <div ng-class="{hidden: !site.isIpadApp}">
-            <button class="btn btn-default engine" title="Extract engine" tooltipplacement="top">
+            <button class="btn btn-default engine" title="Extract engine" tooltip-placement="top">
                 <i class="fa fa-wrench"></i>
             </button>
-            <button class="btn btn-default docs" title="Generate docs" tooltipplacement="top">
+            <button class="btn btn-default docs" title="Generate docs" tooltip-placement="top">
                 <i class="fa fa-book"></i>
             </button>
         </div>
@@ -42,7 +44,7 @@
     <div class="row">
         <div class="col-sm-12">
             <form>
-                <input type="hidden" class="id" name="_id" value="{{site._id}}">
+                <input type="hidden" class="id" name="_id" ng-model="site._id">
 
                 <div class="form-group ">
                     <div class="col-sm-3">
@@ -51,14 +53,14 @@
                 </div>
                 <div class="form-group ">
                     <div class="col-sm-2">
-                        <input class="form-control input-md port" type="text" name="port" placeholder="port" value="{{site.port}}">
+                        <input class="form-control input-md port" type="text" name="port" placeholder="port" ng-model="site.port">
                     </div>
                 </div>
                 <div class="form-group ">
                     <div class="col-sm-7 input-group" style="padding-left:15px;">
                         <input class="form-control input-md directory" type="text"
                                name="directory"
-                               placeholder="directory" value="{{site.directory}}">
+                               placeholder="directory" ng-model="site.directory">
                         <span class="input-group-addon clickable">..</span>
                     </div>
                 </div>
