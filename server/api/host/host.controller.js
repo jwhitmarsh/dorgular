@@ -193,10 +193,10 @@ exports.update = function (req, res) {
             // a bit heavy handed, but it's quick
             console.log('restarting server...');
             var vhost = vhosts.filter(function (x) {
-                return x._id.equals(editedHost._id);
+                return x._id.equals(req.params.id);
             })[0];
 
-            console.log('closing server...');
+            console.log('closing server...', vhost);
             vhost.server.destroy(function () {
                 console.log('server closed');
                 console.log('creating new server', editedHost);

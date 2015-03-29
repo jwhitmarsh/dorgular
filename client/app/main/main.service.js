@@ -4,6 +4,8 @@ angular.module('dorgularApp')
     .service('MainService', ['$http', 'SiteMessageService', function ($http, SiteMessageService) {
         var self = this;
 
+        self.reservedPorts = [];
+
         self.activeHost = null;
 
         self.setActiveHost = function (host) {
@@ -11,13 +13,15 @@ angular.module('dorgularApp')
         };
 
         self.saveHost = function (host) {
-            if (host._id) {
-                SiteMessageService.addMessage('updating host', 3);
-                _updateHost(host);
-            } else {
-                SiteMessageService.addMessage('adding new host', 3);
-                _addHost(host);
-            }
+            console.log(host);
+
+            //if (host._id) {
+            //    SiteMessageService.addMessage('updating host', 3);
+            //    _updateHost(host);
+            //} else {
+            //    SiteMessageService.addMessage('adding new host', 3);
+            //    _addHost(host);
+            //}
         };
 
         self.deleteHost = function () {
@@ -34,8 +38,24 @@ angular.module('dorgularApp')
             site.directory = '';
         };
 
+        self.getReservedPorts = function () {
+            if (self.reservedPorts.length) {
+                return self.reservedPorts;
+            } else {
+                $http.get('/api/hosts/reservedPorts')
+                    .sucess(function (res) {
+                        _apiCallSuccess(res);
+
+                        if (res.status) {
+                            self.reservedPorts = res.data;
+                        }
+                    })
+                    .error(_apiCallError);
+            }
+        };
+
         function _addHost(host) {
-            $http.post('/api/hosts', host)
+            $http.post('/api/hosts/', host)
                 .success(function (data) {
                     _apiCallSuccess(data);
                     self.resetNewHost(host);
@@ -44,7 +64,7 @@ angular.module('dorgularApp')
         }
 
         function _updateHost(host) {
-            $http.put('', host)
+            $http.put('/api/hosts/' + host._id, host)
                 .success(_apiCallSuccess)
                 .error(_apiCallError);
         }

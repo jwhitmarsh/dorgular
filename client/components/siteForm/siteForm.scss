@@ -28,3 +28,11 @@
 .edit-menu .release:hover {
     color: #fff;
 }
+
+.form-control.ng-invalid.ng-touched {
+    border-color: #d9534f;
+}
+
+form.ng-submitted .form-control.ng-invalid {
+    border-color: #d9534f;
+}

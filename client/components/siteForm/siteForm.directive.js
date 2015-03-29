@@ -2,10 +2,11 @@
 
 angular.module('dorgularApp')
     .directive('siteForm', function () {
+
         return {
             templateUrl: 'components/siteForm/siteForm.html',
             restrict: 'EA',
-            scope:{
+            scope: {
                 site: '='
             },
             controller: 'MainCtrl',
@@ -29,6 +30,38 @@ angular.module('dorgularApp')
                         container.slideUp();
                     }
                 });
+
+                scope.submit = function (site) {
+                    if (scope['hostForm' + site.port].$valid) {
+                        scope.saveHost(site);
+                    }
+                };
+
+                scope.nameOnBlur = function (e) {
+                    var $this = $(e.target),
+                        site = $this.scope().site,
+                        name = site.name;
+
+                    if (site.name.length > 0) {
+                        name = name.replace(/ /g, '-')
+                            .replace(/-{2,}/g, '-')
+                            .replace(/-$/, '');
+
+                        site.name = name;
+                    }
+                };
+
+                scope.suggestPort = function (e) {
+                    var $this = $(e.target),
+                        site = $this.scope().site;
+
+                    site.port = 9899;
+                };
+
+                scope.portOnBlur = function (e) {
+                    var resPorts = scope.getReservedPorts();
+                    console.log(resPorts);
+                };
 
                 scope.$watch('site', true);
             }

@@ -36,6 +36,21 @@ footer li:before {
     color: #CCC;
 }
 
+.input-group[class*="col-"] {
+    float: left;
+}
+
+.input-group-addon {
+    transition-duration: 0.3s;
+    color: #999;
+    cursor: pointer;
+}
+
+.input-group-addon:hover {
+    color: #333;
+    background-color: #dddddd;
+}
+
 .edit-menu span {
     display: inline-block;
 }
