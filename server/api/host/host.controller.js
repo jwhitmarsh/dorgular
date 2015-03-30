@@ -283,13 +283,13 @@ var reservedPorts = [
     "9006", "9100", "9418", "11211", "16080", "16384", "16403", "16387", "16393", "16402", "16472", "24000", "24999", "33001", "42000", "42999", "49152", "65535", "50003", "50006"
 ];
 
-exports.getReservedPorts = function () {
-    return {
+exports.getReservedPorts = function (req, res) {
+    res.json(200, {
         status: true,
         command: 'getRestrictedPorts',
         type: typeof(reservedPorts),
         data: reservedPorts
-    };
+    });
 };
 
 function _validateHost(host, vhosts, callback) {

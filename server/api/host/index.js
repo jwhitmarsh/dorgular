@@ -6,7 +6,7 @@ var controller = require('./host.controller');
 var router = express.Router();
 
 router.get('/', controller.index);
-router.get('/:id', controller.show);
+router.get('/host/:id', controller.show);
 router.get('/reservedPorts', controller.getReservedPorts);
 router.post('/', controller.create);
 router.put('/:id', controller.update);

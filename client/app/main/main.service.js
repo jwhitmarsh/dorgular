@@ -42,12 +42,11 @@ angular.module('dorgularApp')
             if (self.reservedPorts.length) {
                 return self.reservedPorts;
             } else {
-                $http.get('/api/hosts/reservedPorts')
-                    .sucess(function (res) {
-                        _apiCallSuccess(res);
-
+                return $http.get('/api/hosts/reservedPorts')
+                    .success(function (res) {
                         if (res.status) {
                             self.reservedPorts = res.data;
+
                         }
                     })
                     .error(_apiCallError);

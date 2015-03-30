@@ -4,6 +4,7 @@ angular.module('dorgularApp', [
     'ngCookies',
     'ngResource',
     'ngSanitize',
+    'ngMessages',
     'btford.socket-io',
     'ui.router',
     'ui.bootstrap'

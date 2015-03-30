@@ -22,7 +22,7 @@ angular.module('dorgularApp')
                 active: false
             };
 
-            $scope.getReservedPorts = MainService.getReservedPorts;
+            $scope.reservedPorts = MainService.getReservedPorts();
 
             // ui methods
             $scope.filterHosts = function (e) {
@@ -79,27 +79,4 @@ angular.module('dorgularApp')
                     $scope.hosts[j].include = true;
                 }
             }
-        }])
-    .directive('siteName', function () {
-
-        var _element;
-
-        function _blur() {
-            console.log('blur');
-
-            var text = _element.val();
-            text = text.replace(/ /g, '-')
-                .replace(/-{2,}/g, '-')
-                .replace(/-$/, '');
-            _element.val(text);
-        }
-
-        return {
-            restrict: 'A',
-            link: function (scope, element) {
-                _element = element;
-
-                element.blur(_blur);
-            }
-        };
-    });
+        }]);
