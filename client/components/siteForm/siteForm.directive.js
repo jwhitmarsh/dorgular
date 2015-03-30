@@ -14,7 +14,7 @@ angular.module('dorgularApp')
                 var container = element.find('.site-form');
                 container.hide();
 
-                scope.site.uid = scope.$id;
+                scope.site.formId = 'hostForm' + scope.$id;
 
                 scope.$watch('site.active', function (active) {
                     if (active) {
@@ -34,8 +34,8 @@ angular.module('dorgularApp')
                 });
 
                 scope.submit = function (site) {
-                    console.log(scope['hostForm' + site.uid].name.$error);
-                    if (scope['hostForm' + site.uid].$valid) {
+                    site.form = scope[site.formId];
+                    if (site.form.$valid) {
                         scope.saveHost(site);
                     }
                 };
@@ -89,26 +89,36 @@ angular.module('dorgularApp')
             }
         };
     }])
-    .directive('portValidator', function () {
+    .directive('portReservedValidator', function ($q) {
+
+        var reservedPorts;
+
         return {
             require: 'ngModel',
             link: function (scope, element, attrs, ctrl) {
-                ctrl.$validators.port = function (modelValue) {
-                    var reservedPorts = scope.reservedPorts;
+                ctrl.$asyncValidators.portReserved = function (modelValue) {
 
                     if (ctrl.$isEmpty(modelValue)) {
                         // consider empty model valid
                         return true;
                     }
 
-                    for (var i = 0; i < reservedPorts.length; i++) {
-                        if (modelValue === reservedPorts[i]) {
-                            console.log('reserved port');
-                            return false;
-                        }
-                    }
+                    return scope.reservedPorts().then(function (res) {
+                        res = res.data;
 
-                    return true;
+                        if (res.status) {
+                            reservedPorts = res.data;
+
+                            for (var i = 0; i < reservedPorts.length; i++) {
+                                if (modelValue === reservedPorts[i]) {
+                                    console.log('reserved port');
+                                    return $q.reject();
+                                }
+                            }
+
+                            return true;
+                        }
+                    });
                 };
             }
         };

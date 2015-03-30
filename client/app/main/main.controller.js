@@ -22,7 +22,7 @@ angular.module('dorgularApp')
                 active: false
             };
 
-            $scope.reservedPorts = MainService.getReservedPorts();
+            $scope.reservedPorts = MainService.getReservedPorts;
 
             // ui methods
             $scope.filterHosts = function (e) {

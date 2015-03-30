@@ -39,18 +39,9 @@ angular.module('dorgularApp')
         };
 
         self.getReservedPorts = function () {
-            if (self.reservedPorts.length) {
-                return self.reservedPorts;
-            } else {
-                return $http.get('/api/hosts/reservedPorts')
-                    .success(function (res) {
-                        if (res.status) {
-                            self.reservedPorts = res.data;
 
-                        }
-                    })
-                    .error(_apiCallError);
-            }
+            return $http.get('/api/hosts/reservedPorts', {cache: true})
+                .error(_apiCallError);
         };
 
         function _addHost(host) {
