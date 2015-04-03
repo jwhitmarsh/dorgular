@@ -171,22 +171,6 @@ exports.update = function (req, res) {
                     cb(err);
                 });
             });
-
-            //Host.findByIdAndUpdate(editedHost._id, {
-            //    $set: {
-            //        name: editedHost.name,
-            //        directory: editedHost.directory,
-            //        port: editedHost.port,
-            //        href: 'http://localhost:' + editedHost.port
-            //    }
-            //}, function (err) {
-            //    if (err) {
-            //        result.status = false;
-            //        result.msg = err;
-            //        return cb(err);
-            //    }
-            //    cb(null);
-            //});
         },
         function (cb) {
             // reset the port the app is listening on in case they've changed the port
@@ -263,7 +247,54 @@ exports.destroy = function (req, res) {
         }
         return res.json(200, result);
     });
+};
 
+exports.sync = function (req, res) {
+    console.log('_syncGitTag: %s', req.params.id);
+
+    var updated;
+    var result = {
+        status: true,
+        msg: 'sinking complete captain!'
+    };
+
+    async.series([
+        function (cb) {
+            console.log('getting host from db...');
+            Host.findById(req.params.id, function (err, host) {
+                if (err) {
+                    result.status = false;
+                    result.msg = err;
+                    return cb(err);
+                }
+                if (!host) {
+                    return res.send(404);
+                }
+                updated = host;
+            });
+        },
+        function (cb) {
+            console.log('geting git tag...');
+            _gitTag(updated.directory, function (tag) {
+                console.log("got new tag: ", tag);
+                updated.tag = tag;
+                cb(null);
+            });
+        },
+        function (cb) {
+            console.log('updating db...');
+            updated.save(function (err) {
+                cb(err);
+            });
+        }
+    ], function (err) {
+        if (err) {
+            console.error(err);
+            result.status = false;
+            result.msg = err;
+        }
+        return res.json(200, result);
+    });
 };
 
 function handleError(res, err) {

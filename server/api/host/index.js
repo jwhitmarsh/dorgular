@@ -7,6 +7,7 @@ var router = express.Router();
 
 router.get('/', controller.index);
 router.get('/host/:id', controller.show);
+router.get('/sync/:id', controller.sync);
 router.get('/reservedPorts', controller.getReservedPorts);
 router.post('/', controller.create);
 router.put('/:id', controller.update);

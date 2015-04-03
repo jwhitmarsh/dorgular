@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dorgularApp')
-    .controller('MainCtrl', ['$scope', '$http', 'socket', 'SiteMessageService', 'MainService',
-        function ($scope, $http, socket, SiteMessageService, MainService) {
+    .controller('MainCtrl', ['$scope', '$http', 'socket', 'SiteMessageService', 'MainService', '$modal',
+        function ($scope, $http, socket, SiteMessageService, MainService, $modal) {
 
             // general vars
             $scope.dorasTag = '4.0.0';
@@ -23,6 +23,21 @@ angular.module('dorgularApp')
             };
 
             $scope.reservedPorts = MainService.getReservedPorts;
+
+            $scope.getDirectories = function () {
+                MainService.getDirectories()
+                    .success(function (data) {
+                        var modalInstance = $modal.open({
+                            templateUrl: 'directoryBrowser.html',
+                            controller: 'DirectoryBrowserCtrl',
+                            resolve: {
+                                directories: function () {
+                                    return data.dirs;
+                                }
+                            }
+                        });
+                    });
+            };
 
             // ui methods
             $scope.filterHosts = function (e) {
@@ -79,4 +94,20 @@ angular.module('dorgularApp')
                     $scope.hosts[j].include = true;
                 }
             }
-        }]);
+        }])
+    .controller('DirectoryBrowserCtrl', function ($scope, $modalInstance, directories) {
+
+        $scope.directories = directories;
+        $scope.selected = {
+            directories: $scope.directories[0]
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.selected.directories);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+
+    });

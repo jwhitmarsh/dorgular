@@ -56,3 +56,33 @@ li.site.active:hover {
 .no-tag {
     color: #A94442;
 }
+
+/* DIRECTORY LIST */
+.directory-list-container {
+    height: 300px;
+    overflow: scroll;
+    cursor: pointer;
+}
+
+.directory-list-container li {
+    padding: 5px;
+    transition-duration: 0.1s;
+}
+
+.directory-list-container li:nth-child(odd) {
+    background: #eee;
+}
+
+.directory-list-container li:hover {
+    background: #428BCA !important;
+    color: white;
+}
+
+.directory-list-container li.active {
+    background: #69c8c7 !important;
+    color: white;
+}
+
+.directory-list-container li i.fa-folder {
+    margin-right: 5px;
+}

@@ -6,6 +6,8 @@ angular.module('dorgularApp')
 
         self.reservedPorts = [];
 
+        self.directories = [];
+
         self.activeHost = null;
 
         self.setActiveHost = function (host) {
@@ -13,15 +15,13 @@ angular.module('dorgularApp')
         };
 
         self.saveHost = function (host) {
-            console.log(host);
-
-            //if (host._id) {
-            //    SiteMessageService.addMessage('updating host', 3);
-            //    _updateHost(host);
-            //} else {
-            //    SiteMessageService.addMessage('adding new host', 3);
-            //    _addHost(host);
-            //}
+            if (host._id) {
+                SiteMessageService.addMessage('updating host', 3);
+                _updateHost(host);
+            } else {
+                SiteMessageService.addMessage('adding new host', 3);
+                _addHost(host);
+            }
         };
 
         self.deleteHost = function () {
@@ -39,8 +39,12 @@ angular.module('dorgularApp')
         };
 
         self.getReservedPorts = function () {
-
             return $http.get('/api/hosts/reservedPorts', {cache: true})
+                .error(_apiCallError);
+        };
+
+        self.getDirectories = function () {
+            return $http.get('/api/utilities/directories')
                 .error(_apiCallError);
         };
 
