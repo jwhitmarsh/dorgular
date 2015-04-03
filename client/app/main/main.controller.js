@@ -24,13 +24,18 @@ angular.module('dorgularApp')
 
             $scope.reservedPorts = MainService.getReservedPorts;
 
-            $scope.getDirectories = function (path) {
-                MainService.getDirectories(path)
+            $scope.getDirectories = function (e) {
+                var site = $(e.target).scope().site;
+
+                MainService.getDirectories(site.directory)
                     .success(function (data) {
                         var modalInstance = $modal.open({
                             templateUrl: 'directoryBrowser.html',
                             controller: 'DirectoryBrowserCtrl',
                             resolve: {
+                                site: function () {
+                                    return site;
+                                },
                                 path: function () {
                                     return data.path;
                                 },
@@ -38,6 +43,12 @@ angular.module('dorgularApp')
                                     return data.dirs;
                                 }
                             }
+                        });
+
+                        modalInstance.result.then(function (selectedItem) {
+                            site.directory = selectedItem;
+                        }, function () {
+                            console.info('Modal dismissed at: ' + new Date());
                         });
                     });
             };
@@ -98,26 +109,27 @@ angular.module('dorgularApp')
                 }
             }
         }])
-    .controller('DirectoryBrowserCtrl', function ($scope, $modalInstance, path, directories, MainService) {
-        $scope.openDirectory = function (e) {
-            var selectedDirectory = $(e.target).text();
-            _getDirectories(path + '/' + selectedDirectory);
-        };
-
+    .controller('DirectoryBrowserCtrl', function ($scope, $modalInstance, path, directories, MainService, site) {
         $scope.directories = directories;
         $scope.path = path;
-        
-        $scope.selected = {
-            directories: $scope.directories[0]
+        $scope.site = site;
+        $scope.selected = site.directory;
+
+        $scope.open = function (e) {
+            _getDirectories($scope.path + '/' + $(e.target).text());
+        };
+
+        $scope.select = function (e) {
+            $scope.selected = $scope.path + '/' + $(e.target).text();
         };
 
         $scope.back = function () {
-            console.log($scope.path);
             _getDirectories($scope.path.substring(0, $scope.path.lastIndexOf("/")));
         };
 
         $scope.ok = function () {
-            $modalInstance.close($scope.selected.directories);
+            // pass back the result to bind to the model
+            $modalInstance.close($scope.selected);
         };
 
         $scope.cancel = function () {
@@ -131,5 +143,4 @@ angular.module('dorgularApp')
                     $scope.directories = data.dirs;
                 });
         }
-
     });

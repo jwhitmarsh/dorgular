@@ -109,19 +109,21 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <input class="form-control input-md selected-directory" type="text">
+                    <input class="form-control input-md selected-directory" type="text" ng-model="selected">
                 </div>
             </div>
             <div class="col-sm-12 directory-list-container">
                 <ul class="list-unstyled directory-list">
                     <li ng-click="back()">..back</li>
-                    <li ng-repeat="directory in directories" ng-dblclick="openDirectory($event)"><i class="fa fa-folder"></i>{{directory}}</li>
+                    <li ng-repeat="directory in directories"
+                        ng-click="select($event)"
+                        ng-dblclick="open($event)"><i class="fa fa-folder"></i>{{directory}}</li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-        <button type="button" class="btn btn-primary directory-select">Select</button>
+        <button type="button" class="btn btn-primary" ng-click="ok()">Select</button>
     </div>
 </script>
