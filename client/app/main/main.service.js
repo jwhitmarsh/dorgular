@@ -52,7 +52,9 @@ angular.module('dorgularApp')
             $http.post('/api/hosts/', host)
                 .success(function (data) {
                     _apiCallSuccess(data);
-                    self.resetNewHost(host);
+                    if (data.status) {
+                        self.resetNewHost(host);
+                    }
                 })
                 .error(_apiCallError);
         }

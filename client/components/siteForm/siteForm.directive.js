@@ -18,6 +18,10 @@ angular.module('dorgularApp')
 
                 scope.$watch('site.active', function (active) {
                     if (active) {
+                        if (scope.site.form) {
+                            scope.site.form.$setPristine();
+                        }
+
                         container.slideDown();
 
                         var elementTop = container.offset().top;
@@ -40,50 +44,12 @@ angular.module('dorgularApp')
                     }
                 };
 
-                scope.nameOnBlur = function (e) {
-                    var $this = $(e.target),
-                        site = $this.scope().site,
-                        name = site.name;
-
-                    if (site.name.length > 0) {
-                        name = name.replace(/ /g, '-')
-                            .replace(/-{2,}/g, '-')
-                            .replace(/-$/, '');
-
-                        site.name = name;
-                    }
-                };
-
                 scope.suggestPort = function (e) {
                     var $this = $(e.target),
                         site = $this.scope().site;
 
                     site.port = 9899;
                 };
-
-                scope.portOnBlur = function (e) {
-                    var $this = $(e.target),
-                        site = $this.scope().site;
-
-                    _checkPortNotReserved(site);
-                };
-
-
-                function _checkPortNotReserved(site) {
-                    scope.getReservedPorts()
-                        .then(function (res) {
-                            if (res.data.status) {
-                                var reservedPorts = res.data.data;
-                                for (var i = 0; i < reservedPorts.length; i++) {
-                                    console.log('%s : $s', site.port, reservedPorts[i]);
-                                    if (site.port === reservedPorts[i]) {
-                                        site.port.$valid = false;
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                }
 
                 scope.$watch('site', true);
             }
@@ -111,7 +77,6 @@ angular.module('dorgularApp')
 
                             for (var i = 0; i < reservedPorts.length; i++) {
                                 if (modelValue === reservedPorts[i]) {
-                                    console.log('reserved port');
                                     return $q.reject();
                                 }
                             }

@@ -47,7 +47,7 @@ exports.show = function (req, res) {
 
 // Creates a new host in the DB.
 exports.create = function (req, res) {
-    console.log('creating...', req.body);
+    console.log('creating...', req.body.name);
 
     var result = {
         status: true,
@@ -67,6 +67,7 @@ exports.create = function (req, res) {
         function (cb) {
             console.log('validating host...');
             _validateHost(newHost, vhosts, function (results) {
+                console.log('validation results', results);
                 if (!results.status) {
                     return cb(results.msg);
                 }
@@ -339,7 +340,7 @@ function _validateHost(host, vhosts, callback) {
 
     // check not in use
     var existingSite = vhosts.filter(function (x) {
-        return x.port === port;
+        return x.server.address().port === port;
     });
 
     if (existingSite.length > 0) {

@@ -48,9 +48,9 @@
 
                 <div class="form-group ">
                     <div class="col-sm-3">
-                        <input required class="form-control input-md name" type="text" name="name" placeholder="name" ng-model="site.name"
-                               ng-blur="nameOnBlur($event)">
-                        <span ng-show="site.form.name.$error.required">required</span>
+                        <input required class="form-control input-md name" type="text" name="name" placeholder="name"
+                               ng-pattern="/^[a-zA-Z0-9-_]*$/"
+                               ng-model="site.name">
                     </div>
                 </div>
                 <div class="form-group ">
@@ -60,7 +60,6 @@
                         <span class="input-group-addon clickable" id="recommendPort"
                               data-toggle="tooltip" data-placement="top"
                               title="Suggest a port" ng-click="suggestPort($event)">&infin;</span>
-                        <span ng-show="site.form.port.$error.portReserved">port is reserved</span>
                     </div>
                 </div>
                 <div class="form-group ">
@@ -71,6 +70,14 @@
                         <span class="input-group-addon clickable" ng-click="getDirectories($event);">..</span>
                     </div>
                 </div>
+                <ul class="col-xs-12 validtion-errors">
+                    <li ng-show="site.form.name.$error.required">Name required</li>
+                    <li ng-show="site.form.name.$error.pattern">Name contains invalid characters (^[a-zA-Z0-9-_]*$)</li>
+                    <li ng-show="site.form.port.$error.required">Port required</li>
+                    <li ng-show="site.form.directory.$error.required">Directory required</li>
+                    <li ng-show="site.form.port.$error.portReserved">Port reserved</li>
+                    <li ng-show="site.form.port.$error.portInUse">Port in use</li>
+                </ul>
             </form>
         </div>
     </div>

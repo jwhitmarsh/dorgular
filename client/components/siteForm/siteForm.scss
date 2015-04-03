@@ -36,3 +36,9 @@
 form.ng-submitted .form-control.ng-invalid {
     border-color: #d9534f;
 }
+
+.validtion-errors {
+    margin-top: 5px;
+    color: #d9534f;
+    list-style-type: none;
+}
