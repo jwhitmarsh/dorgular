@@ -24,13 +24,16 @@ angular.module('dorgularApp')
 
             $scope.reservedPorts = MainService.getReservedPorts;
 
-            $scope.getDirectories = function () {
-                MainService.getDirectories()
+            $scope.getDirectories = function (path) {
+                MainService.getDirectories(path)
                     .success(function (data) {
                         var modalInstance = $modal.open({
                             templateUrl: 'directoryBrowser.html',
                             controller: 'DirectoryBrowserCtrl',
                             resolve: {
+                                path: function () {
+                                    return data.path;
+                                },
                                 directories: function () {
                                     return data.dirs;
                                 }
@@ -95,11 +98,22 @@ angular.module('dorgularApp')
                 }
             }
         }])
-    .controller('DirectoryBrowserCtrl', function ($scope, $modalInstance, directories) {
+    .controller('DirectoryBrowserCtrl', function ($scope, $modalInstance, path, directories, MainService) {
+        $scope.openDirectory = function (e) {
+            var selectedDirectory = $(e.target).text();
+            _getDirectories(path + '/' + selectedDirectory);
+        };
 
         $scope.directories = directories;
+        $scope.path = path;
+        
         $scope.selected = {
             directories: $scope.directories[0]
+        };
+
+        $scope.back = function () {
+            console.log($scope.path);
+            _getDirectories($scope.path.substring(0, $scope.path.lastIndexOf("/")));
         };
 
         $scope.ok = function () {
@@ -109,5 +123,13 @@ angular.module('dorgularApp')
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+
+        function _getDirectories(path) {
+            MainService.getDirectories(path)
+                .success(function (data) {
+                    $scope.path = data.path;
+                    $scope.directories = data.dirs;
+                });
+        }
 
     });

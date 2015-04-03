@@ -5,6 +5,6 @@ var controller = require('./utilities.controller');
 
 var router = express.Router();
 
-router.get('/directories', controller.directories);
+router.post('/directories', controller.directories);
 
 module.exports = router;

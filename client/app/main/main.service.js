@@ -43,8 +43,8 @@ angular.module('dorgularApp')
                 .error(_apiCallError);
         };
 
-        self.getDirectories = function () {
-            return $http.get('/api/utilities/directories')
+        self.getDirectories = function (path) {
+            return $http.post('/api/utilities/directories', {path: path})
                 .error(_apiCallError);
         };
 
