@@ -24,8 +24,9 @@ angular.module('dorgularApp')
             }
         };
 
-        self.deleteHost = function () {
-            $http.delete('/api/hosts/' + self.activeHost._id)
+        self.deleteHost = function (site) {
+            console.log('deleting host', site);
+            $http.delete('/api/hosts/' + site._id)
                 .success(_apiCallSuccess)
                 .error(_apiCallError);
         };

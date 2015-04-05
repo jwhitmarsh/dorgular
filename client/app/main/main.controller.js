@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dorgularApp')
-    .controller('MainCtrl', ['$scope', '$http', 'socket', 'SiteMessageService', 'MainService', '$modal',
-        function ($scope, $http, socket, SiteMessageService, MainService, $modal) {
+    .controller('MainCtrl', ['$scope', '$http', 'socket',
+        function ($scope, $http, socket) {
 
             // general vars
             $scope.dorasTag = '4.0.0';
@@ -13,8 +13,6 @@ angular.module('dorgularApp')
 
             $scope.hosts = [];
 
-            $scope.activeHost = MainService.activeHost;
-
             $scope.newHost = {
                 name: '',
                 port: '',
@@ -22,7 +20,87 @@ angular.module('dorgularApp')
                 active: false
             };
 
+            // ui methods
+            $scope.filterHosts = function (e) {
+                var filter = $(e.target).val().toLowerCase();
+
+                if (filter.length > 0) {
+                    for (var i = 0; i < $scope.hosts.length; i++) {
+                        var host = $scope.hosts[i];
+                        var nameMatch = host.name.toLowerCase().indexOf(filter) >= 0;
+                        var portMatch = host.port.toString().indexOf(filter) >= 0;
+
+                        host.include = !!(nameMatch === true || portMatch === true);
+                    }
+                } else {
+                    _includeAll();
+                }
+            };
+
+            // api calls
+            $http.get('/api/hosts').success(function (hosts) {
+                $scope.hosts = hosts;
+                $scope.sort('name');
+
+                _includeAll();
+
+                socket.syncUpdates('host', $scope.hosts, function () {
+                    console.log('syncUpdates');
+                    _includeAll();
+                });
+            });
+
+            $scope.sort = function (type) {
+                switch (type) {
+                    case 'name' :
+                        $scope.hosts = $scope.hosts.sort(function (a, b) {
+                            var nameA = a.name.toLowerCase(),
+                                nameB = b.name.toLowerCase();
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
+                            return 0;
+                        });
+                        break;
+                    case 'port':
+                        $scope.hosts = $scope.hosts.sort(function (a, b) {
+                            return parseInt(a.port) - parseInt(b.port);
+                        });
+                        break;
+                    default:
+                        console.error('sort type expected!');
+                        break;
+                }
+            };
+
+            $scope.$on('$destroy', function () {
+                console.log('$destroy');
+                socket.unsyncUpdates('host');
+            });
+
+            // privates
+            function _includeAll() {
+                for (var j = 0; j < $scope.hosts.length; j++) {
+                    $scope.hosts[j].include = true;
+                }
+            }
+        }])
+    .controller('HostCtrl', ['$scope', '$http', 'socket', 'SiteMessageService', 'MainService', '$modal',
+        function ($scope, $http, socket, SiteMessageService, MainService, $modal) {
+            $scope.saveHost = MainService.saveHost;
+
+            $scope.deleteHost = MainService.deleteHost;
+
+            $scope.activeHost = MainService.activeHost;
+
+            $scope.setActiveHost = MainService.setActiveHost;
+
             $scope.reservedPorts = MainService.getReservedPorts;
+
+            $scope.closeNewForm = MainService.resetNewHost;
 
             $scope.getDirectories = function (e) {
                 var site = $(e.target).scope().site;
@@ -53,94 +131,62 @@ angular.module('dorgularApp')
                     });
             };
 
-            // ui methods
-            $scope.filterHosts = function (e) {
-                var filter = $(e.target).val().toLowerCase();
-
-                if (filter.length > 0) {
-                    for (var i = 0; i < $scope.hosts.length; i++) {
-                        var host = $scope.hosts[i];
-                        var nameMatch = host.name.toLowerCase().indexOf(filter) >= 0;
-                        var portMatch = host.port.toString().indexOf(filter) >= 0;
-
-                        host.include = !!(nameMatch === true || portMatch === true);
+            $scope.confirmDeleteHost = function (site) {
+                $modal.open({
+                    templateUrl: 'deleteHostModal.html',
+                    controller: 'ConfirmDeleteModalController',
+                    resolve: {
+                        site: function () {
+                            return site;
+                        }
                     }
-                } else {
-                    _includeAll();
-                }
+                });
+            };
+        }])
+    .controller('ConfirmDeleteModalController', ['$scope', '$modalInstance', 'site', 'MainService',
+        function ($scope, $modalInstance, site, MainService) {
+            $scope.ok = function () {
+                $modalInstance.dismiss('cancel');
+                MainService.deleteHost(site);
             };
 
-            $scope.closeNewForm = MainService.resetNewHost;
-
-            // api calls
-            $http.get('/api/hosts').success(function (hosts) {
-                $scope.hosts = hosts.sort(function (a, b) {
-                    var nameA = a.name.toLowerCase(),
-                        nameB = b.name.toLowerCase();
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-                    if (nameA > nameB) {
-                        return 1;
-                    }
-                    return 0;
-                });
-
-                _includeAll();
-
-                socket.syncUpdates('host', $scope.hosts, function () {
-                    _includeAll();
-                });
-            });
-
-            $scope.setActiveHost = MainService.setActiveHost;
-
-            $scope.saveHost = MainService.saveHost;
-
-            $scope.deleteHost = MainService.deleteHost;
-
-            $scope.$on('$destroy', function () {
-                socket.unsyncUpdates('host');
-            });
-
-            function _includeAll() {
-                for (var j = 0; j < $scope.hosts.length; j++) {
-                    $scope.hosts[j].include = true;
-                }
-            }
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
         }])
-    .controller('DirectoryBrowserCtrl', function ($scope, $modalInstance, path, directories, MainService, site) {
-        $scope.directories = directories;
-        $scope.path = path;
-        $scope.site = site;
-        $scope.selected = site.directory;
+    .controller('DirectoryBrowserCtrl', ['$scope', '$modalInstance', 'path', 'directories', 'MainService', 'site',
+        function ($scope, $modalInstance, path, directories, MainService, site) {
+            $scope.directories = directories;
+            $scope.path = path;
+            $scope.site = site;
+            $scope.selected = site.directory;
 
-        $scope.open = function (e) {
-            _getDirectories($scope.path + '/' + $(e.target).text());
-        };
+            $scope.open = function (e) {
+                _getDirectories($scope.path + '/' + $(e.target).text());
+            };
 
-        $scope.select = function (e) {
-            $scope.selected = $scope.path + '/' + $(e.target).text();
-        };
+            $scope.select = function (e) {
+                $scope.selected = $scope.path + '/' + $(e.target).text();
+            };
 
-        $scope.back = function () {
-            _getDirectories($scope.path.substring(0, $scope.path.lastIndexOf("/")));
-        };
+            $scope.back = function () {
+                _getDirectories($scope.path.substring(0, $scope.path.lastIndexOf("/")));
+            };
 
-        $scope.ok = function () {
-            // pass back the result to bind to the model
-            $modalInstance.close($scope.selected);
-        };
+            $scope.ok = function () {
+                // pass back the result to bind to the model
+                $modalInstance.close($scope.selected);
+            };
 
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
 
-        function _getDirectories(path) {
-            MainService.getDirectories(path)
-                .success(function (data) {
-                    $scope.path = data.path;
-                    $scope.directories = data.dirs;
-                });
-        }
-    });
+            function _getDirectories(path) {
+                MainService.getDirectories(path)
+                    .success(function (data) {
+                        $scope.path = data.path;
+                        $scope.directories = data.dirs;
+                    });
+            }
+        }]);

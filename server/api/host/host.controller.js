@@ -144,8 +144,9 @@ exports.update = function (req, res) {
     };
 
     var editedHost = req.body;
+    editedHost._id = req.params.id;
 
-    console.log('editing host', editedHost);
+    console.log('editing host');
 
     async.series([
         function (cb) {
@@ -181,10 +182,10 @@ exports.update = function (req, res) {
                 return x._id.equals(req.params.id);
             })[0];
 
-            console.log('closing server...', vhost);
+            console.log('closing server...');
             vhost.server.destroy(function () {
                 console.log('server closed');
-                console.log('creating new server', editedHost);
+                console.log('creating new server');
                 serverFactory.create(editedHost, function (result) {
                     vhost.server = result.server;
                     vhost.app = result.app;
@@ -340,8 +341,14 @@ function _validateHost(host, vhosts, callback) {
 
     // check not in use
     var existingSite = vhosts.filter(function (x) {
-        return x.server.address().port === port;
+        var portMatch = parseInt(x.server.address().port) === parseInt(port);
+        if (portMatch && !x._id.equals(host._id)) {
+            console.log('site match');
+            return true;
+        }
     });
+
+    console.log(existingSite.length);
 
     if (existingSite.length > 0) {
         result.status = false;
@@ -353,6 +360,7 @@ function _validateHost(host, vhosts, callback) {
         result.msg += ' Requested directory [' + directory + '] does not exist!';
         result.status = false;
     }
+
     return callback(result);
 }
 

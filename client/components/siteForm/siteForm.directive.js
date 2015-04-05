@@ -9,7 +9,7 @@ angular.module('dorgularApp')
             scope: {
                 site: '='
             },
-            controller: 'MainCtrl',
+            controller: 'HostCtrl',
             link: function (scope, element) {
                 var container = element.find('.site-form');
                 container.hide();

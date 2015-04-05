@@ -9,8 +9,7 @@
             </button>
             <span ng-class="{hidden: !site._id}">
                 <span tooltip="Delete" tooltip-placement="top">
-                    <button class="btn btn-danger"
-                            data-toggle="modal" data-target="#deleteConfirmModal" ng-click="setActiveHost(site)">
+                    <button class="btn btn-danger" ng-click="confirmDeleteHost(site)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </span>
@@ -49,6 +48,7 @@
                 <div class="form-group ">
                     <div class="col-sm-3">
                         <input required class="form-control input-md name" type="text" name="name" placeholder="name"
+                               ng-model-options="{updateOn: 'submit'}"
                                ng-pattern="/^[a-zA-Z0-9-_]*$/"
                                ng-model="site.name">
                     </div>
@@ -56,7 +56,7 @@
                 <div class="form-group ">
                     <div class="col-sm-2 input-group">
                         <input required class="form-control input-md port" type="text" name="port" placeholder="port" ng-model="site.port"
-                               ng-model-options="{updateOn: 'blur'}" port-reserved-validator>
+                               ng-model-options="{updateOn: 'submit'}" port-reserved-validator>
                         <span class="input-group-addon clickable" id="recommendPort"
                               data-toggle="tooltip" data-placement="top"
                               title="Suggest a port" ng-click="suggestPort($event)">&infin;</span>
@@ -66,7 +66,9 @@
                     <div class="col-sm-7 input-group" style="padding-left:15px;">
                         <input required class="form-control input-md directory" type="text"
                                name="directory"
-                               placeholder="directory" ng-model="site.directory">
+                               placeholder="directory"
+                               ng-model="site.directory"
+                               ng-model-options="{updateOn: 'submit'}">
                         <span class="input-group-addon clickable" ng-click="getDirectories($event);">..</span>
                     </div>
                 </div>
