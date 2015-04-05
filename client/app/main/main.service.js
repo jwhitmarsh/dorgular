@@ -14,6 +14,14 @@ angular.module('dorgularApp')
             self.activeHost = host;
         };
 
+        self.resetNewHost = function (site) {
+            site.active = false;
+            site.name = '';
+            site.port = '';
+            site.directory = '';
+        };
+
+        // api calls
         self.saveHost = function (host) {
             if (host._id) {
                 SiteMessageService.addMessage('updating host', 3);
@@ -31,12 +39,16 @@ angular.module('dorgularApp')
                 .error(_apiCallError);
         };
 
+        self.sync = function (site) {
+            $http.get('/api/hosts/sync/' + site._id)
+                .success(_apiCallSuccess)
+                .error(_apiCallError);
+        };
 
-        self.resetNewHost = function (site) {
-            site.active = false;
-            site.name = '';
-            site.port = '';
-            site.directory = '';
+        self.syncAll = function () {
+            $http.get('/api/hosts/sync/')
+                .success(_apiCallSuccess)
+                .error(_apiCallError);
         };
 
         self.getReservedPorts = function () {
@@ -49,6 +61,7 @@ angular.module('dorgularApp')
                 .error(_apiCallError);
         };
 
+        // privates
         function _addHost(host) {
             $http.post('/api/hosts/', host)
                 .success(function (data) {

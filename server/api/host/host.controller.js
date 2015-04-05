@@ -254,25 +254,56 @@ exports.destroy = function (req, res) {
 exports.sync = function (req, res) {
     console.log('_syncGitTag: %s', req.params.id);
 
-    var updated;
     var result = {
         status: true,
         msg: 'sinking complete captain!'
     };
 
+    _sync(req.params.id, function (err) {
+        if (err) {
+            console.error(err);
+            result.status = false;
+            result.msg = err;
+        }
+        return res.json(200, result);
+    });
+};
+
+exports.syncAll = function (req, res) {
+    var result = {
+        status: true,
+        msg: 'sinking complete captain!'
+    };
+
+    getAll(function (err, hosts) {
+        if (err) {
+            return handleError(res, err);
+        }
+
+        async.eachSeries(hosts, _sync, function (err) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(200, result);
+        });
+    })
+};
+
+function _sync(id, callback) {
+    var updated;
+
     async.series([
         function (cb) {
             console.log('getting host from db...');
-            Host.findById(req.params.id, function (err, host) {
+            Host.findById(id, function (err, host) {
                 if (err) {
-                    result.status = false;
-                    result.msg = err;
-                    return cb(err);
+                    cb(err);
                 }
                 if (!host) {
-                    return res.send(404);
+                    cb('host cannot be found');
                 }
                 updated = host;
+                cb(null);
             });
         },
         function (cb) {
@@ -290,14 +321,9 @@ exports.sync = function (req, res) {
             });
         }
     ], function (err) {
-        if (err) {
-            console.error(err);
-            result.status = false;
-            result.msg = err;
-        }
-        return res.json(200, result);
+        callback(err);
     });
-};
+}
 
 function handleError(res, err) {
     return res.send(500, err);

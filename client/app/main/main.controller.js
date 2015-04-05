@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dorgularApp')
-    .controller('MainCtrl', ['$scope', '$http', 'socket',
-        function ($scope, $http, socket) {
+    .controller('MainCtrl', ['$scope', '$http', 'socket', 'MainService',
+        function ($scope, $http, socket, MainService) {
 
             // general vars
             $scope.dorasTag = '4.0.0';
@@ -37,19 +37,6 @@ angular.module('dorgularApp')
                 }
             };
 
-            // api calls
-            $http.get('/api/hosts').success(function (hosts) {
-                $scope.hosts = hosts;
-                $scope.sort('name');
-
-                _includeAll();
-
-                socket.syncUpdates('host', $scope.hosts, function () {
-                    console.log('syncUpdates');
-                    _includeAll();
-                });
-            });
-
             $scope.sort = function (type) {
                 switch (type) {
                     case 'name' :
@@ -81,6 +68,21 @@ angular.module('dorgularApp')
                 socket.unsyncUpdates('host');
             });
 
+            // api calls
+            $http.get('/api/hosts').success(function (hosts) {
+                $scope.hosts = hosts;
+                $scope.sort('name');
+
+                _includeAll();
+
+                socket.syncUpdates('host', $scope.hosts, function () {
+                    console.log('syncUpdates');
+                    _includeAll();
+                });
+            });
+
+            $scope.syncAll = MainService.syncAll;
+
             // privates
             function _includeAll() {
                 for (var j = 0; j < $scope.hosts.length; j++) {
@@ -101,6 +103,8 @@ angular.module('dorgularApp')
             $scope.reservedPorts = MainService.getReservedPorts;
 
             $scope.closeNewForm = MainService.resetNewHost;
+
+            $scope.sync = MainService.sync;
 
             $scope.getDirectories = function (e) {
                 var site = $(e.target).scope().site;
