@@ -22,7 +22,7 @@ angular.module('dorgularApp')
         };
 
         // api calls
-        self.saveHost = function (host) {
+        self.save = function (host) {
             if (host._id) {
                 SiteMessageService.addMessage('updating host', 3);
                 _updateHost(host);
@@ -32,7 +32,7 @@ angular.module('dorgularApp')
             }
         };
 
-        self.deleteHost = function (site) {
+        self.delete = function (site) {
             console.log('deleting host', site);
             $http.delete('/api/hosts/' + site._id)
                 .success(_apiCallSuccess)

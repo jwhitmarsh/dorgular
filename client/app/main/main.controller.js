@@ -75,10 +75,7 @@ angular.module('dorgularApp')
 
                 _includeAll();
 
-                socket.syncUpdates('host', $scope.hosts, function () {
-                    console.log('syncUpdates');
-                    _includeAll();
-                });
+                socket.syncUpdates('host', $scope.hosts, _onSyncUpdatesComplete);
             });
 
             $scope.syncAll = MainService.syncAll;
@@ -89,12 +86,17 @@ angular.module('dorgularApp')
                     $scope.hosts[j].include = true;
                 }
             }
+
+            function _onSyncUpdatesComplete(event, site, sites) {
+                site.active = true;
+                _includeAll();
+            }
         }])
     .controller('HostCtrl', ['$scope', '$http', 'socket', 'SiteMessageService', 'MainService', '$modal',
         function ($scope, $http, socket, SiteMessageService, MainService, $modal) {
-            $scope.saveHost = MainService.saveHost;
+            $scope.save = MainService.save;
 
-            $scope.deleteHost = MainService.deleteHost;
+            $scope.delete = MainService.delete;
 
             $scope.activeHost = MainService.activeHost;
 
@@ -105,6 +107,11 @@ angular.module('dorgularApp')
             $scope.closeNewForm = MainService.resetNewHost;
 
             $scope.sync = MainService.sync;
+
+            $scope.toggleIsIpad = function () {
+                $scope.site.isIpadApp = !$scope.site.isIpadApp;
+                MainService.save($scope.site);
+            };
 
             $scope.getDirectories = function (e) {
                 var site = $(e.target).scope().site;
@@ -151,7 +158,7 @@ angular.module('dorgularApp')
         function ($scope, $modalInstance, site, MainService) {
             $scope.ok = function () {
                 $modalInstance.dismiss('cancel');
-                MainService.deleteHost(site);
+                MainService.delete(site);
             };
 
             $scope.cancel = function () {

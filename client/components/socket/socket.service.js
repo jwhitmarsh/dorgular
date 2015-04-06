@@ -28,7 +28,8 @@ angular.module('dorgularApp')
              * @param {Array} array
              * @param {Function} cb
              */
-            syncUpdates: function (modelName, array, cb) {
+            syncUpdates: function (modelName, array, cb, onBeforeSync) {
+                onBeforeSync = onBeforeSync || angular.noop;
                 cb = cb || angular.noop;
 
                 /**
@@ -38,6 +39,8 @@ angular.module('dorgularApp')
                     var oldItem = _.find(array, {_id: item._id});
                     var index = array.indexOf(oldItem);
                     var event = 'created';
+
+                    onBeforeSync();
 
                     // replace oldItem if it exists
                     // otherwise just add item to the collection
@@ -56,6 +59,9 @@ angular.module('dorgularApp')
                  */
                 socket.on(modelName + ':remove', function (item) {
                     var event = 'deleted';
+
+                    onBeforeSync();
+
                     _.remove(array, {_id: item._id});
                     cb(event, item, array);
                 });

@@ -17,7 +17,8 @@
                     <i class="fa fa-refresh"></i>
                 </button>
                 <span title="Click to toggle iPad settings" tooltip-placement="top">
-                    <button class="btn btn-default is-ipad active" data-toggle="button" aria-pressed="true">
+                    <button class="btn btn-default" ng-class="{active: site.isIpadApp}" data-toggle="button"
+                            ng-click="toggleIsIpad()">
                         <i class="fa fa-tablet"></i>
                     </button>
                 </span>

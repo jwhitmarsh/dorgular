@@ -22,7 +22,7 @@ angular.module('dorgularApp')
                             scope.site.form.$setPristine();
                         }
 
-                        container.slideDown();
+                        container.show();
 
                         var elementTop = container.offset().top;
                         var elementHeight = container.height();
@@ -33,14 +33,14 @@ angular.module('dorgularApp')
                             }, 'slow');
                         }
                     } else {
-                        container.slideUp();
+                        container.hide();
                     }
                 });
 
                 scope.submit = function (site) {
                     site.form = scope[site.formId];
                     if (site.form.$valid) {
-                        scope.saveHost(site);
+                        scope.save(site);
                     }
                 };
 
