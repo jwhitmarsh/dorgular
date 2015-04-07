@@ -114,7 +114,7 @@ angular.module('dorgularApp')
             };
 
             $scope.getDirectories = function (e) {
-                var site = $(e.target).scope().site;
+                var site = $scope.site;
 
                 MainService.getDirectories(site.directory)
                     .success(function (data) {
@@ -149,6 +149,18 @@ angular.module('dorgularApp')
                     resolve: {
                         site: function () {
                             return site;
+                        }
+                    }
+                });
+            };
+
+            $scope.extractEngine = function (e) {
+                var engineModalInstance = $modal.open({
+                    templateUrl: 'engineExtractionModal.html',
+                    controller: 'EngineExtractoryModalCtrl',
+                    resolve: {
+                        site: function () {
+                            return $scope.site;
                         }
                     }
                 });
@@ -200,4 +212,13 @@ angular.module('dorgularApp')
                         $scope.directories = data.dirs;
                     });
             }
-        }]);
+        }])
+    .controller('EngineExtractoryModalCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+        $scope.ok = function () {
+            //    do engine stuff
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }]);

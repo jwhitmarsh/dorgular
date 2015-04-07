@@ -45,13 +45,18 @@ module.exports = function (grunt) {
             },
             prod: {
                 options: {
-                    script: 'dist/server/app.js'
+                    script: 'dist/server/app.js',
+                    port: 33000,
+                    debug: false
                 }
             }
         },
         open: {
-            server: {
+            default: {
                 url: 'http://localhost:<%= express.options.port %>'
+            },
+            prod: {
+                path: 'http://localhost:<%= express.prod.options.port %>'
             }
         },
         watch: {
@@ -560,7 +565,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
+            return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open:prod', 'express-keepalive']);
         }
 
         if (target === 'debug') {
@@ -586,7 +591,7 @@ module.exports = function (grunt) {
             'autoprefixer',
             'express:dev',
             'wait',
-            'open',
+            'open:default',
             'watch'
         ]);
     });
