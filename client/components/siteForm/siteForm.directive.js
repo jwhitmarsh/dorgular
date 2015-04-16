@@ -39,7 +39,8 @@ angular.module('dorgularApp')
 
                 scope.submit = function (site) {
                     site.form = scope[site.formId];
-                    if (site.form.$valid) {
+
+                    if (site.form.$valid === undefined || site.form.$valid) {
                         scope.save(site);
                     }
                 };

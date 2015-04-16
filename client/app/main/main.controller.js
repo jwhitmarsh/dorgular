@@ -185,11 +185,11 @@ angular.module('dorgularApp')
             $scope.selected = site.directory;
 
             $scope.open = function (e) {
-                _getDirectories($scope.path + '/' + $(e.target).text());
+                _getDirectories($scope.path + '/' + $(e.target).text().trim());
             };
 
             $scope.select = function (e) {
-                $scope.selected = $scope.path + '/' + $(e.target).text();
+                $scope.selected = $scope.path + '/' + $(e.target).text().trim();
             };
 
             $scope.back = function () {

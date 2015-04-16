@@ -23,6 +23,7 @@ angular.module('dorgularApp')
 
         // api calls
         self.save = function (host) {
+            console.log(host);
             if (host._id) {
                 SiteMessageService.addMessage('updating host', 3);
                 _updateHost(host);
