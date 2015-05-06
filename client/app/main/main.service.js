@@ -62,6 +62,11 @@ angular.module('dorgularApp')
                 .error(_apiCallError);
         };
 
+        self.suggestPort = function () {
+            return $http.get('/api/hosts/suggestPort')
+                .error(_apiCallError);
+        };
+
         // privates
         function _addHost(host) {
             $http.post('/api/hosts/', host)

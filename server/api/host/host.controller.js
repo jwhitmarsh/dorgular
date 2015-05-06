@@ -351,6 +351,48 @@ exports.getReservedPorts = function (req, res) {
     });
 };
 
+exports.suggestPort = function (req, res) {
+    var randomPort = _getRandomValidPort(1000, 65535);
+    res.json(200, {
+        status: true,
+        data: randomPort
+    });
+};
+
+function _getRandomValidPort(min, max) {
+    var randomPort = _getRandomInt(min, max);
+    if (!_isValidPort(randomPort)) {
+        _getRandomValidPort(min, max);
+    }
+    if (_isReservedPort(randomPort)) {
+        _getRandomValidPort(min, max);
+    }
+    if (_isPortInUse(randomPort)) {
+        _getRandomValidPort(min, max);
+    }
+    return randomPort;
+}
+
+
+function _getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function _isValidPort(port) {
+    return /^[0-9]+$/.test(port);
+}
+
+function _isReservedPort(port) {
+    return reservedPorts.indexOf(port.toString()) >= 0;
+}
+
+function _isPortInUse(port) {
+    var host = vhosts.filter(function (x) {
+        return parseInt(x.port) === parseInt(port);
+    });
+    return host.length > 0;
+}
+
 function _validateHost(host, vhosts, callback) {
     var port = host.port,
         directory = host.directory,

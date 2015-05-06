@@ -45,11 +45,14 @@ angular.module('dorgularApp')
                     }
                 };
 
-                scope.suggestPort = function (e) {
+                scope.getSuggestedPort = function (e) {
                     var $this = $(e.target),
                         site = $this.scope().site;
 
-                    site.port = 9899;
+                    scope.suggestPort()
+                        .success(function (res) {
+                            site.port = res.data;
+                        });
                 };
 
                 scope.$watch('site', true);

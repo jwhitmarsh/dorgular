@@ -108,6 +108,8 @@ angular.module('dorgularApp')
 
             $scope.sync = MainService.sync;
 
+            $scope.suggestPort = MainService.suggestPort;
+
             $scope.toggleIsIpad = function () {
                 $scope.site.isIpadApp = !$scope.site.isIpadApp;
                 MainService.save($scope.site);
