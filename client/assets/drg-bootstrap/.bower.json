@@ -1,0 +1,23 @@
+{
+  "name": "drg-bootstrap",
+  "version": "1.0.11",
+  "authors": [
+    "James Whitmarsh <jwhitmarsh@dresources.com>"
+  ],
+  "description": "drg flavoured bootstrap theme",
+  "private": true,
+  "main": [
+    "./dist/drg-bootstrap.css",
+    "./dist/drg-bootstrap.js"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_source": "/Users/jwhitmarsh/src/drg-bootstrap",
+  "_target": "*",
+  "_originalSource": "../drg-bootstrap/"
+}
